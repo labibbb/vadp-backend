@@ -17,14 +17,40 @@ class UserResponse(BaseModel):
 
 # Schema untuk CREATE
 class CameraCreate(BaseModel):
-    camera_rtsp: str
-    camera_status: int
-    camera_creaby: int
-    camera_creadate: date
+    cam_name: str
+    cam_rtsp: str
+    cam_status: int
+    cam_creaby: int
+    cam_creadate: date
 
 # Schema untuk UPDATE
 class CameraUpdate(BaseModel):
-    camera_rtsp: Optional[str] = None
-    camera_status: Optional[int] = None
-    camera_modiby: Optional[int] = None
-    camera_modidate: Optional[date] = None
+    cam_name: Optional[str] = None
+    cam_rtsp: Optional[str] = None
+    cam_status: Optional[int] = None
+    cam_modiby: Optional[int] = None
+    cam_modidate: Optional[date] = None
+
+# Base schema (shared attributes)
+class ModelBase(BaseModel):
+    mod_name: Optional[str] = None
+    mod_file_name: Optional[str] = None
+    mod_status: Optional[int] = None
+
+# Create schema
+class ModelCreate(ModelBase):
+    mod_creaby: Optional[int] = None
+    mod_creadate: Optional[date] = None
+
+# Update schema
+class ModelUpdate(ModelBase):
+    mod_modiby: Optional[int] = None
+    mod_modidate: Optional[date] = None
+
+# Response schema (optional but recommended)
+class ModelOut(ModelBase):
+    mod_id: int
+    mod_creaby: Optional[int] = None
+    mod_creadate: Optional[date] = None
+    mod_modiby: Optional[int] = None
+    mod_modidate: Optional[date] = None

@@ -1,6 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app import crud, schemas, database
+from app.controller import cameraController
+from app.model import cameraModel
+from app.schema import cameraSchema
+from app import database
 
 router = APIRouter()
 
@@ -13,26 +16,30 @@ def get_db():
         db.close()
 
 # GET ALL CAMERAS
-@router.get("/cameras", response_model=list[schemas.CameraCreate])
+@router.get("/cameras", response_model=list[cameraSchema.CameraCreate])
 def read_cameras(db: Session = Depends(get_db)):
-    return crud.get_cameras(db)
+    return cameraController.get_cameras(db)
 
 # GET CAMERA BY ID
-@router.get("/cameras/{camera_id}", response_model=schemas.CameraCreate)
-def read_camera(camera_id: int, db: Session = Depends(get_db)):
-    return crud.get_camera(db, camera_id)
+@router.get("/cameras/{cam_id}", response_model=cameraSchema.CameraCreate)
+def read_camera(cam_id: int, db: Session = Depends(get_db)):
+    return cameraController.get_camera(db, cam_id)
 
 # CREATE CAMERA
-@router.post("/cameras", response_model=schemas.CameraCreate)
-def create_new_camera(camera: schemas.CameraCreate, db: Session = Depends(get_db)):
-    return crud.create_camera(db, camera)
+@router.post("/cameras", response_model=cameraSchema.CameraCreate)
+def create_new_camera(camera: cameraSchema.CameraCreate, db: Session = Depends(get_db)):
+    return cameraController.create_camera(db, camera)
 
 # UPDATE CAMERA (Menggunakan POST)
-@router.post("/cameras/{camera_id}/update", response_model=schemas.CameraCreate)
-def update_existing_camera(camera_id: int, camera: schemas.CameraUpdate, db: Session = Depends(get_db)):
-    return crud.update_camera(db, camera_id, camera)
+@router.post("/cameras/{cam_id}/update", response_model=cameraSchema.CameraCreate)
+def update_existing_camera(cam_id: int, camera: cameraSchema.CameraUpdate, db: Session = Depends(get_db)):
+    return cameraController.update_camera(db, cam_id, camera)
 
 # DELETE CAMERA (Menggunakan POST)
-@router.post("/cameras/{camera_id}/delete")
-def delete_existing_camera(camera_id: int, db: Session = Depends(get_db)):
-    return crud.delete_camera(db, camera_id)
+@router.post("/cameras/{cam_id}/delete")
+def delete_existing_camera(cam_id: int, db: Session = Depends(get_db)):
+    return cameraController.delete_camera(db, cam_id)
+
+@router.post("/cameras", response_model=cameraSchema.CameraResponse)
+def create_new_camera(camera: cameraSchema.CameraCreate, db: Session = Depends(get_db)):
+    return cameraController.create_camera(db, camera)
