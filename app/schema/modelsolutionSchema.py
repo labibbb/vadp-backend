@@ -21,6 +21,7 @@ class ModelSolutionResponse(BaseModel):
     mds_model_id: Optional[int]
     mds_solution_id: Optional[int]
     mds_status: Optional[int]
+    mdl_name: Optional[str]  # <-- ditambahkan
 
     class Config:
         orm_mode = True

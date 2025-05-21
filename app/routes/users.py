@@ -18,7 +18,7 @@ def get_db():
 # GET ALL CAMERAS
 @router.get("/users", response_model=list[userSchema.UserCreate])
 def get_all_users(db: Session = Depends(get_db)):
-    return userController.get_users(db)
+    return userController.get_all_users(db)
 
 # GET CAMERA BY ID
 @router.get("/users/{usr_id}", response_model=userSchema.UserCreate)

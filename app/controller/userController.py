@@ -3,8 +3,8 @@ from app.model import userModel
 from app.schema import userSchema
 
 # GET ALL CAMERAS
-def get_users(db: Session): 
-    return db.query(userModel.Model).all()
+def get_all_users(db: Session): 
+    return db.query(userModel.User).all()
 
 # GET BY ID
 def get_users(db: Session, usr_id: int):

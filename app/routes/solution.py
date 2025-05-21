@@ -33,7 +33,7 @@ def create_new_solutions(solution: solutionSchema.SolutionCreate, db: Session = 
 # UPDATE CAMERA (Menggunakan POST)
 @router.post("/solutions/{sol_id}/update", response_model=solutionSchema.SolutionCreate)
 def update_existing_solution(sol_id: int, solution: solutionSchema.SolutionUpdate, db: Session = Depends(get_db)):
-    return solutionController.update_solution(db, cam_id, camera)
+    return solutionController.update_solution(db, sol_id, solution)
 
 # DELETE CAMERA (Menggunakan POST)
 @router.post("/solutions/{sol_id}/delete")

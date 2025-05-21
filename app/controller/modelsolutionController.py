@@ -1,22 +1,46 @@
 from sqlalchemy.orm import Session
-from app.model import modelsolutionModel
+from app.model import modelsolutionModel, modelModel
 from app.schema import modelsolutionSchema
 from app.utils.response import success_response, error_response
 import datetime
 
 # GET BY ID
 def get_modelsolution(db: Session, solution_id: int):
-    modelsolution = db.query(modelsolutionModel.ModelSolution).filter(modelsolutionModel.ModelSolution.mds_solution_id == solution_id).first()
-    if not modelsolution:
+    results = (
+        db.query(
+            modelsolutionModel.ModelSolution.mds_id,
+            modelsolutionModel.ModelSolution.mds_model_id,
+            modelsolutionModel.ModelSolution.mds_solution_id,
+            modelsolutionModel.ModelSolution.mds_status,
+            modelModel.Model.mod_name
+        )
+        .join(modelModel.Model, modelsolutionModel.ModelSolution.mds_model_id == modelModel.Model.mod_id)
+        .filter(modelsolutionModel.ModelSolution.mds_solution_id == solution_id)
+        .all()
+    )
+
+    if not results:
         raise HTTPException(status_code=404, detail="Detail not found")
-    return modelsolution
+
+    # Konversi manual ke dict agar cocok dengan response_model
+    response = []
+    for row in results:
+        response.append({
+            "mds_id": row.mds_id,
+            "mds_model_id": row.mds_model_id,
+            "mds_solution_id": row.mds_solution_id,
+            "mds_status": row.mds_status,
+            "mdl_name": row.mod_name
+        })
+
+    return response
 
 # CREATE
 def create_modelsolution(db: Session, modelsolution: modelsolutionSchema.ModelSolutionCreate):
     db_modelsolution = modelsolutionModel.ModelSolution(
         mds_model_id=modelsolution.mds_model_id,
         mds_solution_id=modelsolution.mds_solution_id,
-        mds_statis_id=modelsolution.mds_status,
+        mds_status=modelsolution.mds_status,
     )
     db.add(db_modelsolution)
     db.commit()

@@ -4,6 +4,7 @@ from app.controller import modelsolutionController
 from app.model import modelsolutionModel
 from app.schema import modelsolutionSchema
 from app import database
+from typing import List
 
 router = APIRouter()
 
@@ -17,9 +18,10 @@ def get_db():
 
 # GET ALL CAMERAS
 # GET CAMERA BY ID
-@router.get("/modelsolution/{solution_id}", response_model=modelsolutionSchema.ModelSolutionCreate)
+@router.get("/modelsolution/{solution_id}", response_model=List[modelsolutionSchema.ModelSolutionResponse])
 def read_modelsolution(solution_id: int, db: Session = Depends(get_db)):
     return modelsolutionController.get_modelsolution(db, solution_id)
+
 
 # CREATE CAMERA
 @router.post("/modelsolution", response_model=modelsolutionSchema.ModelSolutionCreate)
