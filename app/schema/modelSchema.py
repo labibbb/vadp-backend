@@ -4,9 +4,7 @@ from datetime import date
 
 # Create schema
 class ModelCreate(BaseModel):
-    mod_id: int
-    mod_name: Optional[str]
-    mod_file_name: Optional[str]
+    mod_name: str  # wajib diisi supaya bisa buat nama file
     mod_status: Optional[int]
     mod_creaby: Optional[int]
     mod_creadate: Optional[date]

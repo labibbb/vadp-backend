@@ -29,15 +29,31 @@ def get_all_models(db: Session = Depends(get_db)):
 def read_model(mod_id: int, db: Session = Depends(get_db)):
     return modelController.get_model(db, mod_id)
 
-# CREATE MODEL
 @router.post("/models", response_model=modelSchema.ModelCreate)
-def create_new_model(model: modelSchema.ModelCreate, db: Session = Depends(get_db)):
-    return modelController.create_model(db, model)
+def create_new_model(
+    mod_name: str = Form(...),
+    mod_status: int = Form(None),
+    mod_creaby: int = Form(None),
+    mod_creadate: date = Form(None),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+    return modelController.create_model_with_file(
+        db, mod_name, mod_status, mod_creaby, mod_creadate, file
+    )
 
 # UPDATE MODEL (Menggunakan POST)
-@router.post("/models/{mod_id}/update", response_model=modelSchema.ModelCreate)
-def update_existing_model(mod_id: int, model: modelSchema.ModelUpdate, db: Session = Depends(get_db)):
-    return modelController.update_model(db, mod_id, model)
+@router.patch("/models/{mod_id}")
+def update_model(
+    mod_id: int,
+    mod_name: str = Form(...),
+    file: UploadFile = File(None),  # file boleh kosong
+    db: Session = Depends(get_db)
+):
+    updated = modelController.update_model_with_file(db, mod_id, mod_name, file)
+    if not updated:
+        return {"error": "Model not found"}
+    return updated
 
 # DELETE MODEL (Menggunakan POST)
 @router.post("/models/{mod_id}/delete")
