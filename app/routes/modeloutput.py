@@ -49,7 +49,7 @@ def update_existing_modeloutput(mdo_id: int, modeloutput: modeloutputSchema.Mode
     return modeloutputController.update_modeloutput(db, mdo_id, modeloutput)
 
 # DELETE
-@router.post("/modeloutput/{mdo_id}")
+@router.post("/modeloutput/delete/{mdo_id}")
 def delete_existing_modeloutput(mdo_id: int, db: Session = Depends(get_db)):
     return modeloutputController.delete_modeloutput(db, mdo_id)
 

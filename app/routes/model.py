@@ -29,7 +29,7 @@ def get_all_models(db: Session = Depends(get_db)):
 def read_model(mod_id: int, db: Session = Depends(get_db)):
     return modelController.get_model(db, mod_id)
 
-@router.post("/models", response_model=modelSchema.ModelCreate)
+@router.post("/models", response_model=modelSchema.ModelResponse)
 def create_new_model(
     mod_name: str = Form(...),
     mod_status: int = Form(None),
@@ -43,11 +43,22 @@ def create_new_model(
     )
 
 # UPDATE MODEL (Menggunakan POST)
-@router.patch("/models/{mod_id}")
-def update_model(
+@router.post("/models/update-nofile/{mod_id}")
+def update_model_nofile(
     mod_id: int,
     mod_name: str = Form(...),
-    file: UploadFile = File(None),  # file boleh kosong
+    db: Session = Depends(get_db)
+):
+    updated = modelController.update_model_with_file(db, mod_id, mod_name, None)
+    if not updated:
+        return {"error": "Model not found"}
+    return updated
+
+@router.post("/models/update/{mod_id}")
+def update_model_with_file(
+    mod_id: int,
+    mod_name: str = Form(...),
+    file: UploadFile = File(None),  # file optional
     db: Session = Depends(get_db)
 ):
     updated = modelController.update_model_with_file(db, mod_id, mod_name, file)

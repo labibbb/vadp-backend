@@ -28,12 +28,21 @@ def create_model_with_file(db: Session, mod_name: str, mod_status: int, mod_crea
         mod_file_name=file_name,
         mod_status=mod_status,
         mod_creaby=mod_creaby,
-        mod_creadate=mod_creadate or datetime.date.today()
+        mod_creadate=mod_creadate or datetime.date.today(),
     )
     db.add(db_model)
     db.commit()
     db.refresh(db_model)
-    return db_model
+    return {
+        "mod_id": db_model.mod_id,
+        "mod_name": db_model.mod_name,
+        "mod_file_name": db_model.mod_file_name,
+        "mod_status": db_model.mod_status,
+        "mod_creaby": db_model.mod_creaby,
+        "mod_creadate": db_model.mod_creadate,
+        "mod_modiby": None,
+        "mod_modidate": None
+    }
 
 def update_model_with_file(db: Session, mod_id: int, mod_name: str, file: Optional[UploadFile] = None):
     db_model = db.query(modelModel.Model).filter(modelModel.Model.mod_id == mod_id).first()

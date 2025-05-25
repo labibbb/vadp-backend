@@ -102,7 +102,7 @@ def get_modeloutput_by_modelid(db: Session, mdo_model_id: int):
     )
 
     if not results:
-        raise HTTPException(status_code=404, detail="Data not found")
+        return []  # <--- Ganti jadi return list kosong
 
     return [
         {
@@ -114,3 +114,4 @@ def get_modeloutput_by_modelid(db: Session, mdo_model_id: int):
         }
         for row in results
     ]
+
