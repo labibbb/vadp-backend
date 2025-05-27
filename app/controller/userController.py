@@ -13,6 +13,10 @@ def get_users(db: Session, usr_id: int):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+def get_user_by_username(db: Session, username: str):
+    user = db.query(userModel.User).filter(userModel.User.usr_username == username).first()
+    return user  # Kalau tidak ketemu, return None
+
 # CREATE
 def create_user(db: Session, user: userSchema.UserCreate):
     db_user = userModel.User(

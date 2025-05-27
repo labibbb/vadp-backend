@@ -4,6 +4,7 @@ from app.controller import userController
 from app.model import userModel
 from app.schema import userSchema
 from app import database
+from fastapi.responses import JSONResponse
 
 router = APIRouter()
 
@@ -39,3 +40,22 @@ def update_camera(usr_id: int, user: userSchema.UserUpdate, db: Session = Depend
 @router.post("/users/{usr_id}/delete")
 def delete_user(usr_id: int, db: Session = Depends(get_db)):
     return userController.delete_user(db, usr_id)
+
+@router.get("/users/by-username/{username}", response_model=userSchema.UserResponse)
+def get_user_by_username_route(username: str, db: Session = Depends(get_db)):
+    user = userController.get_user_by_username(db, username)
+    if user is None:
+        # Buat object kosong sesuai schema UserResponse
+        return JSONResponse(content={
+            "usr_id": None,
+            "usr_username": "",
+            "usr_password": "",
+            "usr_name": "",
+            "usr_role": None,
+            "usr_status": None,
+            "usr_creaby": None,
+            "usr_creadate": None,
+            "usr_modiby": None,
+            "usr_modidate": None
+        })
+    return user

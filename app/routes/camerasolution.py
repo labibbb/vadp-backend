@@ -25,6 +25,6 @@ def get_by_usage(solution_usage_id: int, db: Session = Depends(get_db)):
 def create(cs: camerasolutionSchema.CameraSolutionCreate, db: Session = Depends(get_db)):
     return camerasolutionController.create_camerasolution(db, cs)
 
-@router.post("/camerasolution/{cms_id}")
+@router.post("/camerasolution/{cms_id}/delete")
 def delete(cms_id: int, db: Session = Depends(get_db)):
-    return camerasolutionController.delete_camerasolution(db, cms_id)
+    return camerasolutionController.delete_all_camerasolution_by_usage(db, cms_id)
